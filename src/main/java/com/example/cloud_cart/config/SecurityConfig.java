@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +35,8 @@ public class SecurityConfig {
                                                                                                               // APIs
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll() // Allow public access to view
+                                                                                         // products
                         .anyRequest().authenticated())
                 // Add our custom JWT filter before the standard Spring authentication filter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

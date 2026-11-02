@@ -11,9 +11,16 @@ CloudCart is a modern, microservices-ready e-commerce backend built with Java 21
   - Password hashing using BCrypt.
   - Stateless API security using JSON Web Tokens (JWT).
   - Custom JWT authentication filter.
-- [ ] **Module 2: Product Management** (Pending)
-- [ ] **Module 3: Shopping Cart** (Pending)
-- [ ] **Module 4: Order Management** (Pending)
+- [x] **Module 2: Product Management**
+  - Category and Product entities with lazy-loaded relationships.
+  - Pagination and sorting using Spring Data `Pageable`.
+- [x] **Module 3: Shopping Cart**
+  - Bounded context design (storing IDs instead of direct entity mappings).
+  - Dynamic price calculation during DTO mapping.
+- [x] **Module 4: Order Management**
+  - Order lifecycle tracking (Pending, Confirmed, Cancelled).
+  - Synchronous inventory deduction during checkout.
+  - Cart clearing upon successful order placement.
 
 ## Current Tech Stack
 * Java 21
