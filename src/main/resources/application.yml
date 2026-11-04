@@ -5,6 +5,21 @@ spring:
     url: jdbc:postgresql://localhost:5432/cloudcart_db
     username: postgres
     password: 1234
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    type: redis
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID:YOUR_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:YOUR_SECRET_KEY}
+      region:
+        static: ap-south-1
+      s3:
+        bucket: cloudcart-images-2026
   jpa:
     hibernate:
       ddl-auto: update

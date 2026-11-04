@@ -7,12 +7,18 @@ import com.example.cloud_cart.entity.Product;
 import com.example.cloud_cart.repository.CategoryRepository;
 import com.example.cloud_cart.repository.ProductRepository;
 import com.example.cloud_cart.service.ProductService;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
 
     @Override
+    @CacheEvict(value = "products", allEntries = true)
     public ProductResponseDto createProduct(ProductRequestDto dto) {
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -39,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "products", key = "#page + '-' + #size + '-' + #sortBy")
     public Page<ProductResponseDto> getAllProducts(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         Page<Product> products = productRepository.findAll(pageable);
