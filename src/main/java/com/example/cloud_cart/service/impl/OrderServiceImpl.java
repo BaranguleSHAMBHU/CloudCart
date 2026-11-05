@@ -8,6 +8,8 @@ import com.example.cloud_cart.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.cloud_cart.producer.OrderEventProducer;
+import com.example.cloud_cart.event.OrderCreatedEvent;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,10 +21,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
+    private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final OrderEventProducer orderEventProducer;
 
     @Override
     @Transactional
@@ -70,9 +74,17 @@ public class OrderServiceImpl implements OrderService {
         Order savedOrder = orderRepository.save(order);
 
         // Clear the cart after placing the order
+        cartItemRepository.deleteAll(cart.getItems());
         cart.getItems().clear();
         cartRepository.save(cart);
 
+        OrderCreatedEvent event = new OrderCreatedEvent(
+                savedOrder.getOrderId(),
+                user.getUserId(),
+                savedOrder.getTotalAmount(),
+                user.getEmail()
+        );
+        orderEventProducer.sendOrderCreatedEvent(event);
         return mapToResponseDto(savedOrder);
     }
 

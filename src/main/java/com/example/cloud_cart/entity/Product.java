@@ -38,5 +38,6 @@ public class Product {
     private Category category;
 
     @Version
-    private Long version;
+    @Column(columnDefinition = "bigint default 0")
+    private Long version= 0L;
 }
