@@ -23,6 +23,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "com.example.cloud_cart.event"
+        spring.json.value.default.type: com.example.cloud_cart.event.OrderCreatedEvent
   cloud:
     aws:
       credentials:
@@ -39,6 +40,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
   port: 8080
